@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nerfed FC - Official Hub</title>
+
+  <!-- Open Graph Meta Tags (Para sa Facebook/Messenger Preview) -->
+  <meta property="og:title" content="Nerfed FC - Official Hub">
+  <meta property="og:description" content="Ang opisyal na tahanan ng mga stats, line-up, at mga laro ng Nerfed Football Club.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #080c14;
+      --panel-dark: #101929;
+      --card-bg: #162238;
+      --accent-pink: #ec268f;
+      --accent-purple: #7d44c8;
+      --accent-blue: #2080f6;
+      --accent-cyan: #00e5ff;
+      --accent-gold: #ffb703;
+      --accent-gold-glow: rgba(255, 183, 3, 0.4);
+      --text-muted: #8a99ad;
+      --border-blue: rgba(32, 128, 246, 0.2);
+      --glass-bg: rgba(16, 25, 41, 0.75);
+    }
+
+    * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    body { background-color: var(--bg-dark); color: #ffffff; margin: 0; padding: 0; overflow-x: hidden; }
+
+    /* --- TOP UTILITY BAR --- */
+    .top-utility-bar {
+      background: #04060a; padding: 8px 40px; display: flex;
+      justify-content: space-between; align-items: center; font-size: 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .utility-links { display: flex; gap: 20px; align-items: center; }
+    .utility-links button, .utility-links label { 
+      background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.75rem; font-weight: 600;
+    }
+    .utility-links button:hover, .utility-links label:hover { color: var(--accent-cyan); }
+
+    /* --- NAVIGATION BAR --- */
+    .navbar {
+      background: var(--glass-bg); backdrop-filter: blur(12px);
+      height: 70px; display: flex; align-items: center;
+      justify-content: space-between; padding: 0 30px;
+      border-bottom: 1px solid var(--border-blue);
+      position: sticky; top: 0; z-index: 100;
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 20px; }
+    
+    .menu-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-blue);
+      color: #fff; font-size: 1.3rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      width: 42px; height: 42px; border-radius: 50%;
+      transition: all 0.2s;
+    }
+    .menu-btn:hover { background: rgba(236, 38, 143, 0.2); border-color: var(--accent-pink); }
+
+    .brand-logo { display: flex; align-items: center; gap: 12px; }
+    .brand-logo svg { height: 42px; width: 42px; filter: drop-shadow(0 0 8px rgba(236, 38, 143, 0.4)); }
+
+    .nav-links { display: flex; gap: 12px; list-style: none; margin: 0; padding: 0; }
+    .nav-links button {
+      background: none; border: none; color: var(--text-muted);
+      font-weight: 700; font-size: 0.9rem; padding: 8px 16px; border-radius: 6px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .nav-links button:hover, .nav-links button.active {
+      color: #ffffff; background: rgba(236, 38, 143, 0.2);
+    }
+
+    .admin-btn {
+      background: transparent; color: #fff; border: 1px solid var(--accent-pink);
+      padding: 8px 18px; border-radius: 20px; cursor: pointer; font-weight: 700; font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+    .admin-btn.unlocked { background: var(--accent-pink); box-shadow: 0 0 15px rgba(236, 38, 143, 0.5); }
+
+    /* --- SIDEBAR DRAWER --- */
+    .sidebar-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px); z-index: 200;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .sidebar-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .sidebar {
+      position: fixed; top: 0; left: -320px; width: 280px; height: 100vh;
+      background: var(--panel-dark); z-index: 201;
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column; padding: 25px 20px;
+      box-shadow: 4px 0 25px rgba(0, 0, 0, 0.8); border-right: 1px solid var(--border-blue);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+    .close-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+
+    .sidebar-menu { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+    .sidebar-menu button {
+      background: none; border: none; color: #fff; font-size: 1rem; font-weight: 700;
+      display: block; width: 100%; text-align: left; padding: 12px 14px; border-radius: 8px;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .sidebar-menu button:hover, .sidebar-menu button.active { background: rgba(32, 128, 246, 0.2); color: var(--accent-cyan); }
+
+    /* --- PAGE SECTIONS --- */
+    .page-section { display: none; padding-bottom: 60px; }
+    .page-section.active { display: block; }
+    .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+
+    /* --- HOME HERO BANNER --- */
+    .hero-banner {
+      background: linear-gradient(135deg, #101929 0%, #080c14 100%);
+      padding: 50px 20px; text-align: center; border-bottom: 1px solid var(--border-blue);
+    }
+    .hero-banner h1 {
+      font-size: 2.8rem; margin: 0 0 10px 0;
+      background: linear-gradient(90deg, #ec268f, #00e5ff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
+    .dash-card { background: var(--panel-dark); border: 1px solid var(--border-blue); border-radius: 12px; padding: 20px; }
+    .dash-card h3 { color: var(--accent-cyan); margin-top: 0; border-bottom: 1px solid var(--border-blue); padding-bottom: 8px; }
+
+    /* --- PLAYERS STYLES --- */
+    .search-box input {
+      width: 100%; background: var(--panel-dark); border: 1px solid var(--border-blue);
+      padding: 14px 22px; border-radius: 30px; color: #fff; font-size: 0.95rem; outline: none; margin-bottom: 20px;
+    }
+    .no-players-msg {
+      display: none; text-align: center; padding: 30px; background: var(--panel-dark);
+      border: 1px dashed var(--border-blue); border-radius: 12px; color: var(--text-muted); font-weight: 700;
+    }
+    .player-card { background: var(--panel-dark); border-radius: 12px; border: 1px solid var(--border-blue); padding: 16px 24px; margin-bottom: 12px; }
+    .player-main-info { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 50px; align-items: center; }
+    .player-identity { display: flex; align-items: center; gap: 14px; }
+    .player-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent-pink); object-fit: cover; background: var(--bg-dark); }
+    
+    .player-details { display: none; padding-top: 16px; margin-top: 14px; border-top: 1px solid var(--border-blue); }
+    .player-details.open { display: block; }
+    .stats-breakdown { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; text-align: center; }
+    .stat-box { background: rgba(4, 6, 10, 0.6); padding: 10px; border-radius: 8px; }
+
+    /* --- RANK CARD DESIGN --- */
+    .mock-rank-card {
+      background: #030509; border: 2px solid var(--accent-gold); border-radius: 18px;
+      padding: 24px 28px; margin-bottom: 25px; box-shadow: 0 0 25px var(--accent-gold-glow); position: relative;
+    }
+    .mock-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+    .mock-player-info { display: flex; align-items: center; gap: 16px; }
+
+    .mock-rank-frame {
+      width: 58px; height: 58px; border-radius: 10px; border: 2px solid #fff;
+      overflow: hidden; box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); flex-shrink: 0; background: #080c14;
+    }
+    .mock-rank-frame img { width: 100%; height: 100%; object-fit: cover; }
+    .mock-name-group { display: flex; flex-direction: column; gap: 2px; }
+    .mock-player-name { font-size: 1.5rem; font-weight: 900; letter-spacing: 0.5px; color: #ffffff; line-height: 1; }
+    .mock-player-rank { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); letter-spacing: 1px; }
+    .mock-player-rank strong { color: #ffffff; }
+
+    .mock-rank-badge { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 8px; overflow: hidden; }
+    .mock-rank-badge img { width: 100%; height: 100%; object-fit: contain; }
+
+    .mock-level-section { display: flex; align-items: center; gap: 16px; }
+    .mock-level-bar-box { width: 170px; display: flex; flex-direction: column; align-items: flex-end; }
+    .mock-bar-container {
+      width: 100%; height: 10px; background: rgba(255, 255, 255, 0.05);
+      border: 1.5px solid var(--accent-gold); border-radius: 20px; overflow: hidden; padding: 1px;
+    }
+    .mock-bar-fill { height: 100%; background: var(--accent-gold); border-radius: 20px; width: 0%; transition: width 0.4s ease; }
+    .mock-sub-text { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; margin-top: 4px; }
+
+    .mock-level-badge {
+      border: 2px solid var(--accent-gold); border-radius: 12px; width: 44px; height: 52px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 183, 3, 0.05);
+    }
+    .mock-level-num { font-size: 1.4rem; font-weight: 900; color: #fff; line-height: 1; }
+    .mock-level-lbl { font-size: 0.65rem; font-weight: 800; color: var(--text-muted); margin-top: 2px; }
+
+    .mock-rank-bar-section { margin-top: 10px; }
+    .mock-main-bar-bg { width: 100%; height: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--accent-gold); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+    .mock-main-bar-fill { height: 100%; background: var(--accent-gold); border-radius: 10px; width: 0%; transition: width 0.4s ease; }
+    .mock-rank-xp-info { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 800; color: var(--text-muted); letter-spacing: 0.5px; }
+
+    .exp-rules-box { background: rgba(16, 25, 41, 0.6); border: 1px dashed var(--border-blue); padding: 15px; border-radius: 10px; margin-bottom: 25px; }
+
+    .xp-btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .xp-counter-card {
+      background: rgba(4, 6, 10, 0.8); border: 1px solid var(--border-blue); padding: 8px 12px;
+      border-radius: 8px; display: flex; align-items: center; gap: 10px; flex: 1; min-width: 160px;
+    }
+    .xp-counter-label { font-size: 0.8rem; font-weight: 700; color: #fff; display: flex; flex-direction: column; flex: 1; }
+    .xp-counter-label small { color: var(--accent-cyan); font-size: 0.7rem; }
+
+    .btn-counter {
+      background: var(--card-bg); border: 1px solid var(--accent-cyan); color: #fff;
+      font-size: 1rem; font-weight: 800; width: 28px; height: 28px; border-radius: 6px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .btn-counter:hover { background: var(--accent-cyan); color: #000; }
+    .btn-counter.minus:hover { background: #ff3344; border-color: #ff3344; color: #fff; }
+
+    .btn-reset-xp {
+      background: rgba(255, 51, 68, 0.15); border: 1px solid #ff3344; color: #ff3344;
+      font-weight: 800; font-size: 0.75rem; padding: 8px 14px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-reset-xp:hover { background: #ff3344; color: #fff; }
+
+    /* MATCHES SECTION STYLES */
+    .tournament-block { background: rgba(16, 25, 41, 0.4); border: 1px solid var(--border-blue); border-radius: 12px; padding: 20px; margin-bottom: 30px; }
+    .tournament-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent-pink); padding-bottom: 10px; margin-bottom: 15px; }
+    .tournament-title { font-size: 1.3rem; font-weight: 800; color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; }
+    
+    .match-card-list { display: flex; flex-direction: column; gap: 10px; }
+    .match-row-wrapper { background: var(--panel-dark); border: 1px solid var(--border-blue); border-radius: 10px; padding: 12px 20px; }
+    .match-row { display: flex; align-items: center; justify-content: center; gap: 20px; }
+    .team-side { display: flex; align-items: center; gap: 14px; flex: 1; }
+    .team-side.home { justify-content: flex-end; text-align: right; }
+    .team-side.away { justify-content: flex-start; text-align: left; }
+    .team-name { font-weight: 700; font-size: 1rem; }
+    .team-logo-img { width: 36px; height: 36px; object-fit: contain; }
+    .match-time-badge {
+      background: #04060a; border: 1px solid var(--border-blue); padding: 8px 16px;
+      border-radius: 6px; font-weight: 800; font-size: 0.95rem; color: var(--accent-cyan); min-width: 90px; text-align: center;
+    }
+
+    .action-btn { background: var(--accent-pink); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 800; cursor: pointer; transition: opacity 0.2s; font-size: 0.85rem; }
+    .action-btn:hover { opacity: 0.85; }
+    .add-tourn-btn { display: none; margin-bottom: 20px; }
+    .add-match-btn { display: none; }
+    body.is-admin .add-tourn-btn, body.is-admin .add-match-btn { display: inline-block; }
+
+    /* ADMIN EDIT PANELS */
+    .admin-edit-panel, .match-admin-panel, .tourn-admin-panel, .stats-admin-panel, .standing-admin-panel, .rank-admin-panel {
+      display: none; background: rgba(236, 38, 143, 0.05); padding: 12px; border-radius: 8px; margin-top: 12px; border: 1px dashed var(--accent-pink);
+    }
+    body.is-admin .admin-edit-panel, 
+    body.is-admin .match-admin-panel,
+    body.is-admin .tourn-admin-panel,
+    body.is-admin .stats-admin-panel,
+    body.is-admin .standing-admin-panel,
+    body.is-admin .rank-admin-panel { display: block; }
+    
+    .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; align-items: center; }
+    .admin-grid input, .stats-admin-panel input, .standing-admin-panel input { background: var(--bg-dark); border: 1px solid var(--border-blue); color: #fff; padding: 6px 8px; border-radius: 6px; font-size: 0.85rem; width: 100%; }
+
+    .match-admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; align-items: center; }
+    .match-admin-grid input { background: var(--bg-dark); border: 1px solid var(--border-blue); color: #fff; padding: 6px 8px; border-radius: 6px; font-size: 0.8rem; }
+    
+    .delete-btn { background: #ff3344; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
+
+    @media (max-width: 768px) {
+      .nav-links, .top-utility-bar { display: none; }
+      .player-main-info { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+      .stats-breakdown { grid-template-columns: repeat(3, 1fr); }
+      .match-row { gap: 10px; }
+      .team-name { font-size: 0.85rem; }
+      .team-logo-img { width: 28px; height: 28px; }
+      .mock-level-bar-box { width: 90px; }
+      .mock-player-name { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SVG LOGO -->
+  <svg style="display: none;">
+    <symbol id="nerfed-fc-logo" viewBox="0 0 1000 1000">
+      <circle cx="500" cy="500" r="480" fill="#080c14" stroke="#ec268f" stroke-width="25"/>
+      <circle cx="500" cy="500" r="370" fill="none" stroke="#2080f6" stroke-width="12"/>
+      <circle cx="500" cy="240" r="35" fill="#00e5ff"/>
+      <circle cx="725" cy="370" r="35" fill="#00e5ff"/>
+      <circle cx="725" cy="630" r="35" fill="#00e5ff"/>
+      <circle cx="500" cy="760" r="35" fill="#00e5ff"/>
+      <circle cx="275" cy="630" r="35" fill="#00e5ff"/>
+      <circle cx="275" cy="370" r="35" fill="#00e5ff"/>
+      <ellipse cx="500" cy="500" rx="140" ry="290" fill="none" stroke="#ec268f" stroke-width="24" transform="rotate(0 500 500)"/>
+      <ellipse cx="500" cy="500" rx="140" ry="290" fill="none" stroke="#7d44c8" stroke-width="24" transform="rotate(60 500 500)"/>
+      <ellipse cx="500" cy="500" rx="140" ry="290" fill="none" stroke="#2080f6" stroke-width="24" transform="rotate(120 500 500)"/>
+      <circle cx="500" cy="500" r="60" fill="#080c14" stroke="#00e5ff" stroke-width="18"/>
+      <path id="textPath" d="M 180,500 A 320,320 0 0,0 820,500" fill="none"/>
+      <text font-family="'Arial Black', sans-serif" font-weight="900" font-size="52" fill="#ffffff" letter-spacing="3">
+        <textPath href="#textPath" startOffset="50%" text-anchor="middle">
+          NERFED FOOTBALL CLUB
+        </textPath>
+      </text>
+    </symbol>
+  </svg>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR DRAWER -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-logo">
+        <svg><use href="#nerfed-fc-logo"/></svg>
+        <span style="font-weight: 800;">Nerfed FC</span>
+      </div>
+      <button class="close-btn" onclick="closeSidebar()">✕</button>
+    </div>
+    <div class="sidebar-menu">
+      <button class="side-btn active" onclick="showPage('home-page', 'home')">Home</button>
+      <button class="side-btn" onclick="showPage('players-page', 'players')">Players</button>
+      <button class="side-btn" onclick="showPage('ranks-page', 'ranks')">Level / Ranks</button>
+      <button class="side-btn" onclick="showPage('matches-page', 'matches')">Matches</button>
+      <button class="side-btn" onclick="showPage('stats-page', 'stats')">Statistics</button>
+    </div>
+  </aside>
+
+  <!-- TOP UTILITY BAR WITH BACKUP & RESTORE DATA BUTTONS -->
+  <div class="top-utility-bar">
+    <div class="utility-links">
+      <button onclick="showPage('home-page', 'home')">Nerfed FC</button>
+      <button>Shop</button>
+      <button>About Us</button>
+      <button onclick="exportClubData()">📥 Backup Data</button>
+      <label style="cursor:pointer; color:var(--accent-cyan);">
+        📤 Restore Data <input type="file" accept=".json" onchange="importClubData(event)" style="display:none;">
+      </label>
+    </div>
+  </div>
+
+  <!-- MAIN NAVIGATION BAR -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <button class="menu-btn" onclick="openSidebar()">☰</button>
+      <div class="brand-logo"><svg><use href="#nerfed-fc-logo"/></svg></div>
+      <div class="nav-links">
+        <button class="nav-btn active" id="btn-home" onclick="showPage('home-page', 'home')">Home</button>
+        <button class="nav-btn" id="btn-players" onclick="showPage('players-page', 'players')">Players</button>
+        <button class="nav-btn" id="btn-ranks" onclick="showPage('ranks-page', 'ranks')">Level / Ranks</button>
+        <button class="nav-btn" id="btn-matches" onclick="showPage('matches-page', 'matches')">Matches</button>
+        <button class="nav-btn" id="btn-stats" onclick="showPage('stats-page', 'stats')">Statistics</button>
+      </div>
+    </div>
+    <button class="admin-btn" id="adminToggleBtn" onclick="toggleAdmin()">🔒 Admin Sign in</button>
+  </nav>
+
+  <!-- ================= PAGE 1: HOME ================= -->
+  <section id="home-page" class="page-section active">
+    <div class="hero-banner">
+      <h1>WELCOME TO NERFED FC</h1>
+      <p style="color: var(--text-muted);">Ang opisyal na tahanan ng mga stats, line-up, at mga laro ng Nerfed Football Club.</p>
+    </div>
+
+    <div class="container">
+      <div class="dashboard-grid">
+        <div class="dash-card">
+          <h3>⚽ Susunod na Laban</h3>
+          <p style="text-align: center; font-weight: 800; font-size: 1.2rem;" id="home_next_teams">NERFED FC <span style="color: var(--accent-pink);">VS</span> VISCA FC</p>
+          <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem;" id="home_next_info">📅 4-6 PM • Summer League</p>
+        </div>
+
+        <div class="dash-card">
+          <h3>🌟 Player of the Month</h3>
+          <p style="margin: 0; font-weight: 700; font-size: 1.1rem;" id="home_potm_name">BUGAS</p>
+          <p style="color: var(--accent-cyan); font-weight: 800; margin: 5px 0;" id="home_potm_stats">92 OVR • Midfielder</p>
+        </div>
+
+        <div class="dash-card">
+          <h3>📊 Season Standing</h3>
+          <div style="display: flex; justify-content: space-around; text-align: center;">
+            <div><strong style="font-size: 1.5rem;" id="st_win">15</strong><br><small style="color: var(--text-muted);">PANALO</small></div>
+            <div><strong style="font-size: 1.5rem;" id="st_draw">2</strong><br><small style="color: var(--text-muted);">TABLA</small></div>
+            <div><strong style="font-size: 1.5rem;" id="st_loss">1</strong><br><small style="color: var(--text-muted);">TALO</small></div>
+          </div>
+          
+          <div class="standing-admin-panel">
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; margin-top:10px;">
+              <input type="number" id="in_st_win" value="15" placeholder="Panalo">
+              <input type="number" id="in_st_draw" value="2" placeholder="Tabla">
+              <input type="number" id="in_st_loss" value="1" placeholder="Talo">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PAGE 2: PLAYERS ================= -->
+  <section id="players-page" class="page-section">
+    <div class="container">
+      <h2>Player Database</h2>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search player name..." onkeyup="filterPlayers()">
+      </div>
+      <div id="noPlayersMsg" class="no-players-msg">Walang nahanap na player sa pangalang iyan.</div>
+      <div id="playersContainer"></div>
+    </div>
+  </section>
+
+  <!-- ================= PAGE 3: LEVEL & RANKS ================= -->
+  <section id="ranks-page" class="page-section">
+    <div class="container">
+      <h2>Player Level & Rank System</h2>
+      
+      <!-- XP RULES DISPLAY -->
+      <div class="exp-rules-box">
+        <h4 style="margin: 0 0 8px 0; color: var(--accent-gold);">⚡ Tournament XP Points Guide:</h4>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.85rem;">
+          <div>⚽ <strong>Goal Scored:</strong> <span style="color:var(--accent-cyan);">+50 EXP</span></div>
+          <div>🏆 <strong>Match Win:</strong> <span style="color:var(--accent-cyan);">+25 EXP</span></div>
+          <div>🎮 <strong>Participation:</strong> <span style="color:var(--accent-cyan);">+10 EXP</span></div>
+        </div>
+      </div>
+
+      <!-- RANK CARDS DISPLAY -->
+      <div id="ranksContainer"></div>
+    </div>
+  </section>
+
+  <!-- ================= PAGE 4: MATCHES ================= -->
+  <section id="matches-page" class="page-section">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Fixtures & Results</h2>
+        <button class="action-btn add-tourn-btn" onclick="addNewTournament()">🏆 Add New Tournament Section</button>
+      </div>
+
+      <div id="tournamentsContainer"></div>
+    </div>
+  </section>
+
+  <!-- ================= PAGE 5: STATS ================= -->
+  <section id="stats-page" class="page-section">
+    <div class="container">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2>Club Statistics</h2>
+        <button class="action-btn add-match-btn" onclick="addNewStatRow()">➕ Add Leaderboard Row</button>
+      </div>
+      <div class="dashboard-grid" id="statsContainer"></div>
+    </div>
+  </section>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    const DEFAULT_AVATAR = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 24 24' fill='none' stroke='%238a99ad' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'></path><circle cx='12' cy='7' r='4'></circle></svg>";
+
+    const RANK_TIERS = [
+      { name: "UNRANKED", minXp: 0, maxXp: 99, icon: "unranked.jpg.png" },
+      { name: "TRIALIST 1", minXp: 100, maxXp: 199, icon: "trialist_1.jpg.png" },
+      { name: "TRIALIST 2", minXp: 200, maxXp: 299, icon: "trialist_2.jpg.png" },
+      { name: "TRIALIST 3", minXp: 300, maxXp: 399, icon: "trialist_3.jpg.png" },
+      { name: "TEMPO 1", minXp: 400, maxXp: 499, icon: "tempo_1.jpg.png" },
+      { name: "TEMPO 2", minXp: 500, maxXp: 599, icon: "tempo_2.jpg.png" },
+      { name: "TEMPO 3", minXp: 600, maxXp: 699, icon: "tempo_3.jpg.png" },
+      { name: "BEGINNER 1", minXp: 700, maxXp: 799, icon: "beginner_1.jpg.png" },
+      { name: "BEGINNER 2", minXp: 800, maxXp: 899, icon: "beginner_2.jpg.png" },
+      { name: "BEGINNER 3", minXp: 900, maxXp: 999, icon: "beginner_3.jpg.png" },
+      { name: "ACE 1", minXp: 1000, maxXp: 1099, icon: "ace_1.jpg.png" },
+      { name: "ACE 2", minXp: 1100, maxXp: 1199, icon: "ace_2.jpg.png" },
+      { name: "ACE 3", minXp: 1200, maxXp: 1299, icon: "ace_3.jpg.png" }
+    ];
+
+    function calculateRankAndLevel(xp) {
+      let currentTier = RANK_TIERS[0];
+      let nextTier = RANK_TIERS[1];
+      let level = Math.floor(xp / 100) + 1;
+
+      for (let i = 0; i < RANK_TIERS.length; i++) {
+        if (xp >= RANK_TIERS[i].minXp) {
+          currentTier = RANK_TIERS[i];
+          nextTier = RANK_TIERS[i + 1] || RANK_TIERS[i];
+        }
+      }
+
+      return { currentTier, nextTier, level };
+    }
+
+    function openSidebar() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('sidebarOverlay').classList.add('active');
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+
+    function showPage(pageId, name) {
+      document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.side-btn').forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(pageId).classList.add('active');
+      
+      const mainBtn = document.getElementById(`btn-${name}`);
+      if (mainBtn) mainBtn.classList.add('active');
+
+      closeSidebar();
+    }
+
+    // ADMIN LOGIC
+    const ADMIN_PASSWORD = "1234";
+    let isAdmin = false;
+
+    function toggleAdmin() {
+      const btn = document.getElementById('adminToggleBtn');
+      if (!isAdmin) {
+        const password = prompt("Enter Admin Password:");
+        if (password === ADMIN_PASSWORD) {
+          isAdmin = true;
+          document.body.classList.add('is-admin');
+          btn.textContent = "🔓 Admin Unlocked";
+          btn.classList.add('unlocked');
+        } else if (password !== null) alert("Incorrect Password!");
+      } else {
+        isAdmin = false;
+        document.body.classList.remove('is-admin');
+        btn.textContent = "🔒 Admin Sign in";
+        btn.classList.remove('unlocked');
+      }
+    }
+
+    // UPDATED RATING LOGIC WITH GOALKEEPER FORMULA
+    function calculateRating(pos, pac, sho, pas, dri, def, phy) {
+      let rating = 0;
+      const p = (pos || '').toLowerCase();
+      
+      if (p.includes('gk') || p.includes('keeper') || p.includes('goalkeeper')) {
+        // Goalkeeper rating emphasis: DEF, PHY, PAC, PAS
+        rating = (def * 0.40) + (phy * 0.30) + (pac * 0.15) + (pas * 0.15);
+      } else if (p.includes('def')) {
+        rating = (def * 0.35) + (phy * 0.25) + (pac * 0.15) + (pas * 0.10) + (dri * 0.10) + (sho * 0.05);
+      } else if (p.includes('mid')) {
+        rating = (pas * 0.25) + (dri * 0.25) + (pac * 0.15) + (sho * 0.15) + (def * 0.10) + (phy * 0.10);
+      } else {
+        // Forward / Attacker
+        rating = (sho * 0.30) + (pac * 0.25) + (dri * 0.20) + (pas * 0.10) + (phy * 0.10) + (def * 0.05);
+      }
+      return Math.min(99, Math.max(40, Math.round(rating)));
+    }
+
+    // GENERATE PLAYERS & RANKS
+    const container = document.getElementById('playersContainer');
+    const ranksContainer = document.getElementById('ranksContainer');
+
+    for (let i = 1; i <= 20; i++) {
+      const savedData = JSON.parse(localStorage.getItem(`nfc_player_${i}`)) || {
+        name: i === 1 ? "BUGAS" : `Player ${i}`,
+        pos: i === 1 ? "MIDFIELDER" : "Forward",
+        pac: i === 1 ? 90 : 80, 
+        sho: i === 1 ? 91 : 75, 
+        pas: i === 1 ? 87 : 78, 
+        dri: i === 1 ? 97 : 82, 
+        def: i === 1 ? 89 : 60, 
+        phy: i === 1 ? 98 : 70,
+        goals: 0,
+        wins: 0,
+        matches: 0,
+        bonusXp: 0,
+        img: DEFAULT_AVATAR
+      };
+
+      const autoRating = calculateRating(savedData.pos, savedData.pac, savedData.sho, savedData.pas, savedData.dri, savedData.def, savedData.phy);
+
+      // --- 1. PLAYER DATABASE CARD ---
+      const playerCard = document.createElement('div');
+      playerCard.className = 'player-card';
+      playerCard.id = `card_wrapper_${i}`;
+      playerCard.innerHTML = `
+        <div class="player-main-info">
+          <div class="player-identity">
+            <img class="player-avatar" id="avatar_${i}" src="${savedData.img || DEFAULT_AVATAR}">
+            <div>
+              <strong id="name_${i}">${savedData.name}</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted)">Nerfed FC</div>
+            </div>
+          </div>
+          <div style="text-align:center;" id="pos_${i}">${savedData.pos}</div>
+          <div style="text-align:center; font-weight:800; color:var(--accent-cyan);" id="rating_${i}">${autoRating}</div>
+          <div style="text-align:center;">Nerfed FC</div>
+          <button style="background:none; border:none; color:#fff; cursor:pointer;" onclick="toggleDetails(${i})">▼</button>
+        </div>
+
+        <div class="player-details" id="details_${i}">
+          <div class="stats-breakdown">
+            <div class="stat-box"><span id="pac_${i}">${savedData.pac}</span><br><small>PAC</small></div>
+            <div class="stat-box"><span id="sho_${i}">${savedData.sho}</span><br><small>SHO</small></div>
+            <div class="stat-box"><span id="pas_${i}">${savedData.pas}</span><br><small>PAS</small></div>
+            <div class="stat-box"><span id="dri_${i}">${savedData.dri}</span><br><small>DRI</small></div>
+            <div class="stat-box"><span id="def_${i}">${savedData.def}</span><br><small>DEF</small></div>
+            <div class="stat-box"><span id="phy_${i}">${savedData.phy}</span><br><small>PHY</small></div>
+          </div>
+        </div>
+
+        <div class="admin-edit-panel">
+          <div class="admin-grid">
+            <input type="file" id="in_img_${i}" accept="image/*">
+            <input type="text" id="in_name_${i}" value="${savedData.name}" placeholder="Name">
+            <input type="text" id="in_pos_${i}" value="${savedData.pos}" placeholder="Pos">
+            <input type="number" id="in_pac_${i}" value="${savedData.pac}">
+            <input type="number" id="in_sho_${i}" value="${savedData.sho}">
+            <input type="number" id="in_pas_${i}" value="${savedData.pas}">
+            <input type="number" id="in_dri_${i}" value="${savedData.dri}">
+            <input type="number" id="in_def_${i}" value="${savedData.def}">
+            <input type="number" id="in_phy_${i}" value="${savedData.phy}">
+          </div>
+        </div>
+      `;
+      container.appendChild(playerCard);
+
+      // --- 2. RANK CARD UI ---
+      const totalXp = ((savedData.goals || 0) * 50) + ((savedData.wins || 0) * 25) + ((savedData.matches || 0) * 10) + (savedData.bonusXp || 0);
+      const { currentTier, nextTier, level } = calculateRankAndLevel(totalXp);
+      const levelXp = totalXp % 100;
+      const rankXpPercent = Math.min(100, Math.max(0, ((totalXp - currentTier.minXp) / ((currentTier.maxXp + 1) - currentTier.minXp)) * 100));
+
+      const rankCard = document.createElement('div');
+      rankCard.className = 'mock-rank-card';
+      rankCard.id = `rank_card_${i}`; 
+      rankCard.innerHTML = `
+        <div class="mock-card-top">
+          <div class="mock-player-info">
+            <div class="mock-rank-frame">
+              <img id="rk_avatar_${i}" src="${savedData.img || DEFAULT_AVATAR}">
+            </div>
+            <div class="mock-name-group">
+              <span class="mock-player-name" id="rk_name_${i}">${savedData.name}</span>
+              <span class="mock-player-rank">RANK <strong id="rk_tier_${i}">${currentTier.name}</strong></span>
+            </div>
+            <div class="mock-rank-badge">
+              <img src="${currentTier.icon}" alt="${currentTier.name}">
+            </div>
+          </div>  
+
+          <div class="mock-level-section">
+            <div class="mock-level-bar-box">
+              <div class="mock-bar-container">
+                <div class="mock-bar-fill" id="rk_lvl_fill_${i}" style="width: ${levelXp}%;"></div>
+              </div>
+              <span class="mock-sub-text">XP <span id="rk_lvl_xp_${i}">${levelXp}</span>/100</span>
+            </div>
+
+            <div class="mock-level-badge">
+              <div class="mock-level-num" id="rk_lvl_${i}">${level}</div>
+              <div class="mock-level-lbl">LV</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mock-rank-bar-section">
+          <div class="mock-main-bar-bg">
+            <div class="mock-main-bar-fill" id="rk_main_fill_${i}" style="width: ${rankXpPercent}%;"></div>
+          </div>
+          <div class="mock-rank-xp-info">
+            <span>XP <span id="rk_xp_val_${i}">${totalXp}</span> / <span id="rk_xp_max_${i}">${currentTier.maxXp + 1}</span></span>
+            <span>NEXT <span style="color:#fff;" id="rk_next_tier_${i}">${nextTier.name}!</span></span>
+          </div>
+        </div>
+
+        <div class="rank-admin-panel">
+          <div style="font-size:0.8rem; font-weight:700; color:var(--accent-pink); margin-bottom:8px;">Quick XP Button Controls (${savedData.name}):</div>
+          
+          <div class="xp-btn-group">
+            <div class="xp-counter-card">
+              <div class="xp-counter-label">
+                <span>Goals (+50 XP)</span>
+                <small>Total: <strong id="val_goals_${i}">${savedData.goals || 0}</strong></small>
+              </div>
+              <button class="btn-counter minus" onclick="adjustXpStat(${i}, 'goals', -1)">-</button>
+              <button class="btn-counter" onclick="adjustXpStat(${i}, 'goals', 1)">+</button>
+            </div>
+
+            <div class="xp-counter-card">
+              <div class="xp-counter-label">
+                <span>Wins (+25 XP)</span>
+                <small>Total: <strong id="val_wins_${i}">${savedData.wins || 0}</strong></small>
+              </div>
+              <button class="btn-counter minus" onclick="adjustXpStat(${i}, 'wins', -1)">-</button>
+              <button class="btn-counter" onclick="adjustXpStat(${i}, 'wins', 1)">+</button>
+            </div>
+
+            <div class="xp-counter-card">
+              <div class="xp-counter-label">
+                <span>Played (+10 XP)</span>
+                <small>Total: <strong id="val_matches_${i}">${savedData.matches || 0}</strong></small>
+              </div>
+              <button class="btn-counter minus" onclick="adjustXpStat(${i}, 'matches', -1)">-</button>
+              <button class="btn-counter" onclick="adjustXpStat(${i}, 'matches', 1)">+</button>
+            </div>
+
+            <button class="btn-reset-xp" onclick="resetXpStats(${i})">🔄 Reset Stats</button>
+          </div>
+        </div>
+      `;
+      ranksContainer.appendChild(rankCard);
+
+      bindAdminInputs(i);
+    }
+
+    function toggleDetails(id) { document.getElementById(`details_${id}`).classList.toggle('open'); }
+
+    // UPDATED FILTER PLAYERS LOGIC WITH EMPTY STATE
+    function filterPlayers() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      let hasMatches = false;
+
+      for (let i = 1; i <= 20; i++) {
+        const name = document.getElementById(`name_${i}`).textContent.toLowerCase();
+        const matches = name.includes(query);
+        
+        document.getElementById(`card_wrapper_${i}`).style.display = matches ? 'block' : 'none';
+        document.getElementById(`rank_card_${i}`).style.display = matches ? 'block' : 'none';
+        
+        if (matches) hasMatches = true;
+      }
+
+      document.getElementById('noPlayersMsg').style.display = hasMatches ? 'none' : 'block';
+    }
+
+    function adjustXpStat(i, key, delta) {
+      const savedData = JSON.parse(localStorage.getItem(`nfc_player_${i}`)) || {};
+      let currentVal = savedData[key] || 0;
+      currentVal = Math.max(0, currentVal + delta);
+
+      savedData[key] = currentVal;
+      localStorage.setItem(`nfc_player_${i}`, JSON.stringify(savedData));
+
+      document.getElementById(`val_${key}_${i}`).textContent = currentVal;
+      updatePlayerRankUI(i, savedData);
+    }
+
+    function resetXpStats(i) {
+      if (confirm("Sigurado ka bang gusto mong i-reset ang XP/Stats ng player na ito sa 0?")) {
+        const savedData = JSON.parse(localStorage.getItem(`nfc_player_${i}`)) || {};
+        savedData.goals = 0;
+        savedData.wins = 0;
+        savedData.matches = 0;
+        savedData.bonusXp = 0;
+
+        localStorage.setItem(`nfc_player_${i}`, JSON.stringify(savedData));
+
+        document.getElementById(`val_goals_${i}`).textContent = 0;
+        document.getElementById(`val_wins_${i}`).textContent = 0;
+        document.getElementById(`val_matches_${i}`).textContent = 0;
+
+        updatePlayerRankUI(i, savedData);
+      }
+    }
+
+    function updatePlayerRankUI(i, savedData) {
+      const goals = savedData.goals || 0;
+      const wins = savedData.wins || 0;
+      const matches = savedData.matches || 0;
+      const bonusXp = savedData.bonusXp || 0;
+
+      const totalXp = (goals * 50) + (wins * 25) + (matches * 10) + bonusXp;
+      const { currentTier, nextTier, level } = calculateRankAndLevel(totalXp);
+      const levelXp = totalXp % 100;
+      const rankXpPercent = Math.min(100, Math.max(0, ((totalXp - currentTier.minXp) / ((currentTier.maxXp + 1) - currentTier.minXp)) * 100));
+
+      const tierElem = document.getElementById(`rk_tier_${i}`);
+      if (tierElem) tierElem.textContent = currentTier.name;
+      
+      const lvlElem = document.getElementById(`rk_lvl_${i}`);
+      if (lvlElem) lvlElem.textContent = level;
+
+      const lvlFill = document.getElementById(`rk_lvl_fill_${i}`);
+      if (lvlFill) lvlFill.style.width = `${levelXp}%`;
+
+      const lvlXp = document.getElementById(`rk_lvl_xp_${i}`);
+      if (lvlXp) lvlXp.textContent = levelXp;
+
+      const mainFill = document.getElementById(`rk_main_fill_${i}`);
+      if (mainFill) mainFill.style.width = `${rankXpPercent}%`;
+
+      const xpVal = document.getElementById(`rk_xp_val_${i}`);
+      if (xpVal) xpVal.textContent = totalXp;
+
+      const xpMax = document.getElementById(`rk_xp_max_${i}`);
+      if (xpMax) xpMax.textContent = currentTier.maxXp + 1;
+
+      const nextTierElem = document.getElementById(`rk_next_tier_${i}`);
+      if (nextTierElem) nextTierElem.textContent = `${nextTier.name}!`;
+
+      const rankCard = document.getElementById(`rank_card_${i}`);
+      if (rankCard) {
+        const badgeImg = rankCard.querySelector('.mock-rank-badge img');
+        if (badgeImg) {
+          badgeImg.src = currentTier.icon;
+          badgeImg.alt = currentTier.name;
+        }
+      }
+    }
+
+    function bindAdminInputs(i) {
+      const statFields = ['pac', 'sho', 'pas', 'dri', 'def', 'phy'];
+      
+      const updateCalculatedStats = () => {
+        const pos = document.getElementById(`in_pos_${i}`).value;
+        const pac = Number(document.getElementById(`in_pac_${i}`).value) || 0;
+        const sho = Number(document.getElementById(`in_sho_${i}`).value) || 0;
+        const pas = Number(document.getElementById(`in_pas_${i}`).value) || 0;
+        const dri = Number(document.getElementById(`in_dri_${i}`).value) || 0;
+        const def = Number(document.getElementById(`in_def_${i}`).value) || 0;
+        const phy = Number(document.getElementById(`in_phy_${i}`).value) || 0;
+
+        const nameVal = document.getElementById(`in_name_${i}`).value;
+        const currentImg = document.getElementById(`avatar_${i}`).src;
+
+        document.getElementById(`name_${i}`).textContent = nameVal;
+        document.getElementById(`rk_name_${i}`).textContent = nameVal;
+        document.getElementById(`pos_${i}`).textContent = pos;
+        statFields.forEach(f => { document.getElementById(`${f}_${i}`).textContent = document.getElementById(`in_${f}_${i}`).value; });
+        
+        const finalRating = calculateRating(pos, pac, sho, pas, dri, def, phy);
+        document.getElementById(`rating_${i}`).textContent = finalRating;
+
+        const savedData = JSON.parse(localStorage.getItem(`nfc_player_${i}`)) || {};
+        savedData.name = nameVal;
+        savedData.pos = pos;
+        savedData.pac = pac;
+        savedData.sho = sho;
+        savedData.pas = pas;
+        savedData.dri = dri;
+        savedData.def = def;
+        savedData.phy = phy;
+        savedData.img = currentImg;
+
+        localStorage.setItem(`nfc_player_${i}`, JSON.stringify(savedData));
+
+        if (i === 1) syncPOTM(nameVal, finalRating, pos);
+      };
+
+      ['name', 'pos', ...statFields].forEach(field => {
+        document.getElementById(`in_${field}_${i}`).addEventListener('input', updateCalculatedStats);
+      });
+
+      document.getElementById(`in_img_${i}`).addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            const imgData = evt.target.result;
+            document.getElementById(`avatar_${i}`).src = imgData;
+            document.getElementById(`rk_avatar_${i}`).src = imgData;
+            updateCalculatedStats();
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    function syncPOTM(name, rating, pos) {
+      document.getElementById('home_potm_name').textContent = name;
+      document.getElementById('home_potm_stats').textContent = `${rating} OVR • ${pos}`;
+    }
+
+    // --- STANDING SYSTEM (HOME PAGE) ---
+    const savedStanding = JSON.parse(localStorage.getItem('nfc_season_standing')) || { win: 15, draw: 2, loss: 1 };
+    document.getElementById('st_win').textContent = savedStanding.win;
+    document.getElementById('st_draw').textContent = savedStanding.draw;
+    document.getElementById('st_loss').textContent = savedStanding.loss;
+    document.getElementById('in_st_win').value = savedStanding.win;
+    document.getElementById('in_st_draw').value = savedStanding.draw;
+    document.getElementById('in_st_loss').value = savedStanding.loss;
+
+    function updateStanding() {
+      const win = document.getElementById('in_st_win').value;
+      const draw = document.getElementById('in_st_draw').value;
+      const loss = document.getElementById('in_st_loss').value;
+
+      document.getElementById('st_win').textContent = win;
+      document.getElementById('st_draw').textContent = draw;
+      document.getElementById('st_loss').textContent = loss;
+
+      localStorage.setItem('nfc_season_standing', JSON.stringify({ win, draw, loss }));
+    }
+    ['in_st_win', 'in_st_draw', 'in_st_loss'].forEach(id => document.getElementById(id).addEventListener('input', updateStanding));
+
+    // --- MULTI-TOURNAMENT FIXTURES SYSTEM ---
+    const defaultTournamentData = [
+      {
+        title: "🏆 Summer League Tournament",
+        matches: [
+          {
+            homeName: "Nerfed FC",
+            homeLogo: DEFAULT_AVATAR,
+            time: "4-6 PM",
+            awayName: "Visca Fc",
+            awayLogo: DEFAULT_AVATAR
+          }
+        ]
+      }
+    ];
+
+    let tournamentList = JSON.parse(localStorage.getItem('nfc_multi_tournaments')) || defaultTournamentData;
+
+    function renderTournaments() {
+      const container = document.getElementById('tournamentsContainer');
+      container.innerHTML = '';
+
+      tournamentList.forEach((t, tIndex) => {
+        const tournBlock = document.createElement('div');
+        tournBlock.className = 'tournament-block';
+
+        let matchesHTML = '';
+        t.matches.forEach((m, mIndex) => {
+          matchesHTML += `
+            <div class="match-row-wrapper" style="margin-bottom: 10px;">
+              <div class="match-row">
+                <div class="team-side home">
+                  <span class="team-name" id="m_hname_${tIndex}_${mIndex}">${m.homeName}</span>
+                  <img class="team-logo-img" id="m_hlogo_${tIndex}_${mIndex}" src="${m.homeLogo || DEFAULT_AVATAR}">
+                </div>
+
+                <div class="match-time-badge" id="m_time_${tIndex}_${mIndex}">${m.time}</div>
+
+                <div class="team-side away">
+                  <img class="team-logo-img" id="m_alogo_${tIndex}_${mIndex}" src="${m.awayLogo || DEFAULT_AVATAR}">
+                  <span class="team-name" id="m_aname_${tIndex}_${mIndex}">${m.awayName}</span>
+                </div>
+              </div>
+
+              <div class="match-admin-panel">
+                <div style="font-size:0.75rem; color:var(--accent-pink); font-weight:700; margin-bottom:5px;">Edit Match #${mIndex + 1}</div>
+                <div class="match-admin-grid">
+                  <input type="text" id="in_m_hname_${tIndex}_${mIndex}" value="${m.homeName}" placeholder="Home Team">
+                  <input type="file" id="in_m_hlogo_${tIndex}_${mIndex}" accept="image/*">
+                  <input type="text" id="in_m_time_${tIndex}_${mIndex}" value="${m.time}" placeholder="Time / Score">
+                  <input type="text" id="in_m_aname_${tIndex}_${mIndex}" value="${m.awayName}" placeholder="Away Team">
+                  <input type="file" id="in_m_alogo_${tIndex}_${mIndex}" accept="image/*">
+                  <button class="delete-btn" onclick="deleteMatch(${tIndex}, ${mIndex})">🗑️ Delete Match</button>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        tournBlock.innerHTML = `
+          <div class="tournament-header">
+            <div class="tournament-title" id="t_title_${tIndex}">${t.title}</div>
+            <div>
+              <button class="action-btn add-match-btn" onclick="addNewMatch(${tIndex})">➕ Add Match</button>
+              <button class="delete-btn add-match-btn" onclick="deleteTournament(${tIndex})">🗑️ Delete Section</button>
+            </div>
+          </div>
+
+          <div class="tourn-admin-panel">
+            <div style="display:flex; gap:10px; align-items:center;">
+              <strong style="font-size:0.8rem;">Tournament Name:</strong>
+              <input type="text" id="in_t_title_${tIndex}" value="${t.title}" style="flex:1; background:var(--bg-dark); border:1px solid var(--border-blue); color:#fff; padding:6px; border-radius:6px;">
+            </div>
+          </div>
+
+          <div class="match-card-list">${matchesHTML}</div>
+        `;
+
+        container.appendChild(tournBlock);
+        bindTournamentEvents(tIndex);
+      });
+
+      syncNextMatchToHome();
+    }
+
+    function bindTournamentEvents(tIndex) {
+      const tInput = document.getElementById(`in_t_title_${tIndex}`);
+      if (tInput) {
+        tInput.addEventListener('input', (e) => {
+          tournamentList[tIndex].title = e.target.value;
+          document.getElementById(`t_title_${tIndex}`).textContent = e.target.value;
+          saveTournamentsData();
+        });
+      }
+
+      tournamentList[tIndex].matches.forEach((m, mIndex) => {
+        const hName = document.getElementById(`in_m_hname_${tIndex}_${mIndex}`);
+        const time = document.getElementById(`in_m_time_${tIndex}_${mIndex}`);
+        const aName = document.getElementById(`in_m_aname_${tIndex}_${mIndex}`);
+
+        const updateMatch = () => {
+          m.homeName = hName.value;
+          m.time = time.value;
+          m.awayName = aName.value;
+
+          document.getElementById(`m_hname_${tIndex}_${mIndex}`).textContent = m.homeName;
+          document.getElementById(`m_time_${tIndex}_${mIndex}`).textContent = m.time;
+          document.getElementById(`m_aname_${tIndex}_${mIndex}`).textContent = m.awayName;
+
+          saveTournamentsData();
+        };
+
+        if (hName) hName.addEventListener('input', updateMatch);
+        if (time) time.addEventListener('input', updateMatch);
+        if (aName) aName.addEventListener('input', updateMatch);
+
+        const bindLogo = (inputId, imgId, key) => {
+          const fileInput = document.getElementById(inputId);
+          if (fileInput) {
+            fileInput.addEventListener('change', (e) => {
+              const file = e.target.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                  m[key] = evt.target.result;
+                  document.getElementById(imgId).src = evt.target.result;
+                  saveTournamentsData();
+                };
+                reader.readAsDataURL(file);
+              }
+            });
+          }
+        };
+
+        bindLogo(`in_m_hlogo_${tIndex}_${mIndex}`, `m_hlogo_${tIndex}_${mIndex}`, 'homeLogo');
+        bindLogo(`in_m_alogo_${tIndex}_${mIndex}`, `m_alogo_${tIndex}_${mIndex}`, 'awayLogo');
+      });
+    }
+
+    function syncNextMatchToHome() {
+      if (tournamentList.length > 0 && tournamentList[0].matches.length > 0) {
+        const firstTourn = tournamentList[0];
+        const firstMatch = firstTourn.matches[0];
+        document.getElementById('home_next_teams').innerHTML = `${firstMatch.homeName} <span style="color: var(--accent-pink);">VS</span> ${firstMatch.awayName}`;
+        document.getElementById('home_next_info').textContent = `📅 ${firstMatch.time} • ${firstTourn.title.replace(/[^a-zA-Z0-9 ]/g, '')}`;
+      }
+    }
+
+    function addNewTournament() {
+      tournamentList.push({
+        title: "🏆 New Tournament Name",
+        matches: [{ homeName: "Nerfed FC", homeLogo: DEFAULT_AVATAR, time: "00:00", awayName: "New Opponent", awayLogo: DEFAULT_AVATAR }]
+      });
+      saveTournamentsData();
+      renderTournaments();
+    }
+
+    function deleteTournament(tIndex) {
+      if (confirm("Sigurado ka bang gusto mong burahin ang buong Tournament Section na ito?")) {
+        tournamentList.splice(tIndex, 1);
+        saveTournamentsData();
+        renderTournaments();
+      }
+    }
+
+    function addNewMatch(tIndex) {
+      tournamentList[tIndex].matches.push({
+        homeName: "Nerfed FC", homeLogo: DEFAULT_AVATAR, time: "00:00", awayName: "New Opponent", awayLogo: DEFAULT_AVATAR
+      });
+      saveTournamentsData();
+      renderTournaments();
+    }
+
+    function deleteMatch(tIndex, mIndex) {
+      if (confirm("Sigurado ka bang gusto mong burahin ang match na ito?")) {
+        tournamentList[tIndex].matches.splice(mIndex, 1);
+        saveTournamentsData();
+        renderTournaments();
+      }
+    }
+
+    function saveTournamentsData() {
+      localStorage.setItem('nfc_multi_tournaments', JSON.stringify(tournamentList));
+      syncNextMatchToHome();
+    }
+
+    // --- STATISTICS LEADERBOARD SYSTEM ---
+    const defaultStatsData = [
+      { category: "⚽ Top Scorers", p1: "BUGAS — 12 Goals", p2: "Player 2 — 8 Goals" },
+      { category: "🎯 Top Assists", p1: "Player 3 — 9 Assists", p2: "BUGAS — 6 Assists" }
+    ];
+
+    let statsList = JSON.parse(localStorage.getItem('nfc_statistics_data')) || defaultStatsData;
+
+    function renderStats() {
+      const container = document.getElementById('statsContainer');
+      container.innerHTML = '';
+
+      statsList.forEach((s, index) => {
+        const card = document.createElement('div');
+        card.className = 'dash-card';
+        card.innerHTML = `
+          <h3 id="st_cat_${index}">${s.category}</h3>
+          <p id="st_p1_${index}">1. ${s.p1}</p>
+          <p id="st_p2_${index}">2. ${s.p2}</p>
+
+          <div class="stats-admin-panel">
+            <div style="font-size:0.75rem; color:var(--accent-pink); font-weight:700; margin-bottom:5px;">Edit Leaderboard Category</div>
+            <input type="text" id="in_st_cat_${index}" value="${s.category}" placeholder="Category Title" style="margin-bottom:5px;">
+            <input type="text" id="in_st_p1_${index}" value="${s.p1}" placeholder="Top 1 Player & Score" style="margin-bottom:5px;">
+            <input type="text" id="in_st_p2_${index}" value="${s.p2}" placeholder="Top 2 Player & Score" style="margin-bottom:5px;">
+            <button class="delete-btn" onclick="deleteStatRow(${index})">🗑️ Delete Leaderboard</button>
+          </div>
+        `;
+        container.appendChild(card);
+        bindStatInputs(index);
+      });
+    }
+
+    function bindStatInputs(i) {
+      const cat = document.getElementById(`in_st_cat_${i}`);
+      const p1 = document.getElementById(`in_st_p1_${i}`);
+      const p2 = document.getElementById(`in_st_p2_${i}`);
+
+      const updateStat = () => {
+        statsList[i].category = cat.value;
+        statsList[i].p1 = p1.value;
+        statsList[i].p2 = p2.value;
+
+        document.getElementById(`st_cat_${i}`).textContent = cat.value;
+        document.getElementById(`st_p1_${i}`).textContent = `1. ${p1.value}`;
+        document.getElementById(`st_p2_${i}`).textContent = `2. ${p2.value}`;
+
+        localStorage.setItem('nfc_statistics_data', JSON.stringify(statsList));
+      };
+
+      cat.addEventListener('input', updateStat);
+      p1.addEventListener('input', updateStat);
+      p2.addEventListener('input', updateStat);
+    }
+
+    function addNewStatRow() {
+      statsList.push({ category: "⭐ New Category", p1: "Player A — 0 Points", p2: "Player B — 0 Points" });
+      localStorage.setItem('nfc_statistics_data', JSON.stringify(statsList));
+      renderStats();
+    }
+
+    function deleteStatRow(index) {
+      if (confirm("Sigurado ka bang gusto mong burahin ang leaderboard na ito?")) {
+        statsList.splice(index, 1);
+        localStorage.setItem('nfc_statistics_data', JSON.stringify(statsList));
+        renderStats();
+      }
+    }
+
+    // --- DATA BACKUP & RESTORE FUNCTIONS ---
+    function exportClubData() {
+      const data = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('nfc_')) {
+          data[key] = localStorage.getItem(key);
+        }
+      }
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `NerfedFC_Backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+
+    function importClubData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const importedData = JSON.parse(e.target.result);
+          Object.keys(importedData).forEach(key => {
+            localStorage.setItem(key, importedData[key]);
+          });
+          alert('Matagumpay na na-restore ang data! Mag-re-reload ang page.');
+          location.reload();
+        } catch (err) {
+          alert('Maling JSON file format!');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // INITIALIZATIONS
+    renderTournaments();
+    renderStats();
+
+    // INITIAL POTM SYNC
+    const p1Data = JSON.parse(localStorage.getItem('nfc_player_1'));
+    if (p1Data) {
+      const autoRating = calculateRating(p1Data.pos, p1Data.pac, p1Data.sho, p1Data.pas, p1Data.dri, p1Data.def, p1Data.phy);
+      syncPOTM(p1Data.name, autoRating, p1Data.pos);
+    }
+  </script>
+</body>
+</html>
